@@ -8,22 +8,18 @@ import 'package:http/http.dart' as http;
 import '../../components/my_buttons.dart';
 import '../../components/my_textfield.dart';
 
-class NewProducto extends StatefulWidget {
-  const NewProducto({super.key});
+class NewCategoria extends StatefulWidget {
+  const NewCategoria({super.key});
 
   @override
-  State<NewProducto> createState() => _NewProductoState();
+  State<NewCategoria> createState() => _NewCategoriaState();
 }
 
-class _NewProductoState extends State<NewProducto> {
+class _NewCategoriaState extends State<NewCategoria> {
   TextEditingController nombre_producto = TextEditingController();
-  TextEditingController descripcion_producto = TextEditingController();
-  TextEditingController precio_producto = TextEditingController();
+  TextEditingController descripcion = TextEditingController();
+  TextEditingController precio = TextEditingController();
   TextEditingController id_categoria = TextEditingController();
-  TextEditingController imagen_producto = TextEditingController();
-
-  //String _ruta = '';
-  //String _image64 = '';
 
   void wrongMessage() {
     showDialog(
@@ -55,15 +51,15 @@ class _NewProductoState extends State<NewProducto> {
       },
     );
     if (nombre_producto.text != "" &&
-        descripcion_producto.text != "" &&
-        precio_producto.text != "" &&
+        descripcion.text != "" &&
+        precio.text != "" &&
         id_categoria.text != "") {
       String url = "http://localhost/apiSP2/admin/agregar_producto.php";
       try {
         var res = await http.post(Uri.parse(url), body: {
           "nombre_producto": nombre_producto.text,
-          "descripcion": descripcion_producto.text,
-          "precio": precio_producto.text,
+          "descripcion": descripcion.text,
+          "precio": precio.text,
           "id_categoria": id_categoria.text,
         });
 
@@ -111,26 +107,17 @@ class _NewProductoState extends State<NewProducto> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //const SizedBox(height: 50),
+                    const SizedBox(height: 50),
 
                     // logo
-                    /*Icon(
+                    Icon(
                       Icons.inventory_2,
                       size: 100,
                       color: Colors.grey[900],
-                    ),*/
+                    ),
 
                     const SizedBox(height: 25),
 
-                    /*MyUploadImageButton(
-                      imagePath: _ruta,
-                      controller: imagen_producto,
-                      onTap: () {
-                        print('hola');
-                      },
-                    ),*/
-
-                    const SizedBox(height: 25),
                     // email textfield
                     MyTextField(
                       controller: nombre_producto,
@@ -142,7 +129,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     // password textfield
                     MyTextArea(
-                      controller: descripcion_producto,
+                      controller: descripcion,
                       hintText: 'Descripcion',
                       obscureText: false,
                     ),
@@ -151,7 +138,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     // password textfield
                     MyTextField(
-                      controller: precio_producto,
+                      controller: precio,
                       hintText: 'Precio',
                       obscureText: false,
                     ),

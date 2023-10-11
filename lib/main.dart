@@ -3,7 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/main_page.dart';
 import 'package:flutter_application_2/pages/about_page.dart';
+import 'package:flutter_application_2/pages/admin/new_producto.dart';
 import 'package:flutter_application_2/pages/login_page.dart';
+import 'package:flutter_application_2/pages/prueba.dart';
+import 'package:flutter_application_2/pages/user/intro_screen.dart';
 
 /*
 
@@ -29,7 +32,10 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
       routes: {
         '/home': (context) => MainPage(),
-        '/about': (context) => AboutPage()
+        '/introScreen': (context) => IntroScreen(),
+        '/about': (context) => AboutPage(),
+        '/prueba': (context) => Prueba(),
+        '/agregar_producto': (context) => NewProducto(),
       },
     );
   }

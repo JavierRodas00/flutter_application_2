@@ -1,26 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main_page.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter_application_2/pages/admin/new_producto.dart';
+import 'package:flutter_application_2/pages/admin/update_producto.dart';
 import '../pages/about_page.dart';
 
-/*
+//Nav Bar
 
-D R A W E R
+// ignore: must_be_immutable
+class MyBottomNavBar extends StatelessWidget {
+  void Function(int)? onTabChange;
+  MyBottomNavBar({super.key, required this.onTabChange});
 
-This is the drawer which the user can open by tapping on the top left menu icon.
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color.fromARGB(255, 221, 164, 41),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: GNav(
+        color: Colors.white,
+        activeColor: Colors.white,
+        tabBackgroundColor: Color.fromARGB(255, 242, 180, 47),
+        padding: const EdgeInsets.all(16),
+        gap: 8,
+        onTabChange: (value) => onTabChange!(value),
+        tabs: const [
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
+          ),
+          GButton(
+            icon: Icons.shopping_bag_rounded,
+            text: 'Shop',
+          ),
+          GButton(
+            icon: Icons.person,
+            text: 'Profile',
+          ),
+          GButton(
+            icon: Icons.settings,
+            text: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-This drawer can hold many list tiles. Usually you would place the buttons/pages
-that you couldn't fit on the bottom nav bar. 
-
-For e.g. a logout button, an about section, etc.
-
-What pages should the rest of the app contain? 
-
-Remember, just having more and more pages isn't always a good thing.
-Sometimes, it's better to be simple and concise in what your app does,
-so you include only the absolutely necessary pages and functionality to your app!
-
-*/
+//Side Bar
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -32,12 +58,6 @@ class MyDrawer extends StatelessWidget {
     // pop app
     Navigator.pop(context);
     // go back to login page
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MainPage(),
-      ),
-    );
   }
 
   @override
@@ -73,6 +93,28 @@ class MyDrawer extends StatelessWidget {
                 leading: const Icon(Icons.inventory_2),
                 title: Text(
                   "Agregar Producto",
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+              ),
+            ),
+          ),
+          //Update producto
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UpdateProducto(),
+                  ),
+                );
+              },
+              child: ListTile(
+                leading: const Icon(Icons.inventory_2),
+                title: Text(
+                  "Actualizar Producto",
                   style: TextStyle(color: Colors.grey[700]),
                 ),
               ),

@@ -5,11 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:http/http.dart' as http;
-
-import '../components/my_login_button.dart';
-import '../components/my_square_tile.dart';
+import '../../components/my_buttons.dart';
 import '../components/my_textfield.dart';
-import '../main_page.dart';
 
 class NewUser extends StatefulWidget {
   const NewUser({super.key});

@@ -8,29 +8,26 @@ import 'package:http/http.dart' as http;
 import '../../components/my_buttons.dart';
 import '../../components/my_textfield.dart';
 
-class NewProducto extends StatefulWidget {
-  const NewProducto({super.key});
+class UpdateProducto extends StatefulWidget {
+  const UpdateProducto({super.key});
 
   @override
-  State<NewProducto> createState() => _NewProductoState();
+  State<UpdateProducto> createState() => _UpdateProductoState();
 }
 
-class _NewProductoState extends State<NewProducto> {
+class _UpdateProductoState extends State<UpdateProducto> {
   TextEditingController nombre_producto = TextEditingController();
-  TextEditingController descripcion_producto = TextEditingController();
-  TextEditingController precio_producto = TextEditingController();
+  TextEditingController descripcion = TextEditingController();
+  TextEditingController precio = TextEditingController();
   TextEditingController id_categoria = TextEditingController();
-  TextEditingController imagen_producto = TextEditingController();
-
-  //String _ruta = '';
-  //String _image64 = '';
+  TextEditingController id_producto = TextEditingController();
 
   void wrongMessage() {
     showDialog(
         context: context,
         builder: (context) {
           return const AlertDialog(
-            title: Text('Error al insertar producto.'),
+            title: Text('Error al actualizar producto.'),
           );
         });
   }
@@ -40,12 +37,12 @@ class _NewProductoState extends State<NewProducto> {
         context: context,
         builder: (context) {
           return const AlertDialog(
-            title: Text('Producto Insertado correctamente.'),
+            title: Text('Producto actualizado correctamente.'),
           );
         });
   }
 
-  Future<void> register() async {
+  Future<void> update() async {
     showDialog(
       context: context,
       builder: (context) {
@@ -55,27 +52,28 @@ class _NewProductoState extends State<NewProducto> {
       },
     );
     if (nombre_producto.text != "" &&
-        descripcion_producto.text != "" &&
-        precio_producto.text != "" &&
+        descripcion.text != "" &&
+        precio.text != "" &&
         id_categoria.text != "") {
-      String url = "http://localhost/apiSP2/admin/agregar_producto.php";
+      String url = "http://localhost/apiSP2/admin/update_producto.php";
       try {
         var res = await http.post(Uri.parse(url), body: {
+          "id_producto": id_producto.text,
           "nombre_producto": nombre_producto.text,
-          "descripcion": descripcion_producto.text,
-          "precio": precio_producto.text,
+          "descripcion": descripcion.text,
+          "precio": precio.text,
           "id_categoria": id_categoria.text,
         });
 
         var response = jsonDecode(res.body);
         if (response["success"] == "true") {
-          print("Usuario registrado correctamente");
+          print("Producto actualizado correctamente");
           Navigator.pop(context);
           Navigator.pop(context);
           successfulAdd();
         } else {
           Navigator.pop(context);
-          print("Error registrar usuario");
+          print("Error al actualizar producto");
           wrongMessage();
         }
       } catch (e) {
@@ -111,26 +109,25 @@ class _NewProductoState extends State<NewProducto> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //const SizedBox(height: 50),
+                    const SizedBox(height: 50),
 
                     // logo
-                    /*Icon(
+                    Icon(
                       Icons.inventory_2,
                       size: 100,
                       color: Colors.grey[900],
-                    ),*/
+                    ),
 
                     const SizedBox(height: 25),
 
-                    /*MyUploadImageButton(
-                      imagePath: _ruta,
-                      controller: imagen_producto,
-                      onTap: () {
-                        print('hola');
-                      },
-                    ),*/
+                    MyTextField(
+                      controller: id_producto,
+                      hintText: 'Id Producto',
+                      obscureText: false,
+                    ),
 
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 10),
+
                     // email textfield
                     MyTextField(
                       controller: nombre_producto,
@@ -142,7 +139,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     // password textfield
                     MyTextArea(
-                      controller: descripcion_producto,
+                      controller: descripcion,
                       hintText: 'Descripcion',
                       obscureText: false,
                     ),
@@ -151,7 +148,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     // password textfield
                     MyTextField(
-                      controller: precio_producto,
+                      controller: precio,
                       hintText: 'Precio',
                       obscureText: false,
                     ),
@@ -167,7 +164,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    MyRegisterButton(onTap: register),
+                    MyRegisterButton(onTap: update),
                     // sign in button
 
                     const SizedBox(height: 50),

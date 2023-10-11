@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
-/*
-
-T E X T F I E L D
-
-This is used to get the user input when they type something in.
-We will use this for the email and password fields when we log them in
-
-*/
-
+//Text Field
 class MyTextField extends StatelessWidget {
   final controller;
   final String hintText;
@@ -44,6 +36,7 @@ class MyTextField extends StatelessWidget {
   }
 }
 
+//Text Area
 class MyTextArea extends StatelessWidget {
   final controller;
   final String hintText;

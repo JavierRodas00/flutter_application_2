@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/about_page.dart';
-
-import 'components/my_bottom_nav_bar.dart';
-import 'components/my_drawer.dart';
+import 'components/my_nav_bar.dart';
 import 'pages/home_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/setting_page.dart';
-import 'pages/shop_page.dart';
+import 'pages/user/shop_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

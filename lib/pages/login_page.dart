@@ -1,16 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/pages/new_user_page.dart';
 import 'package:http/http.dart' as http;
-
-import '../components/my_login_button.dart';
-import '../components/my_square_tile.dart';
-import '../components/my_text_button.dart';
+import '../../components/my_buttons.dart';
 import '../components/my_textfield.dart';
-import '../main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -70,16 +66,19 @@ class _LoginPageState extends State<LoginPage> {
           "password_usuario": password_usuario.text
         });
 
-        var response = jsonDecode(res.body);
-        if (response["success"] == "true") {
-          print("Login correctamente");
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainPage(),
-            ),
-          );
+        if (res.statusCode == 200) {
+          var response = jsonDecode(res.body);
+          for (var aux in response) {
+            print("Login correctamente");
+            correo_usuario.clear();
+            password_usuario.clear();
+            Navigator.pop(context);
+            if (aux["admin_usuario"] == "1") {
+              Navigator.pushNamed(context, '/home');
+            } else {
+              Navigator.pushNamed(context, '/introScreen');
+            }
+          }
         } else {
           Navigator.pop(context);
           print("Error Login");
@@ -101,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -111,10 +110,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
 
                   // logo
-                  Icon(
+                  const Icon(
                     Icons.lock,
                     size: 100,
-                    color: Colors.grey[900],
+                    color: Colors.black,
                   ),
 
                   const SizedBox(height: 25),
