@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/components/loading.dart';
 import 'package:flutter_application_2/pages/new_user_page.dart';
 import 'package:http/http.dart' as http;
 import '../../components/my_buttons.dart';
@@ -53,8 +54,8 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: loading(),
         );
       },
     );
@@ -110,10 +111,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
 
                   // logo
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                    color: Colors.black,
+                  Image.asset(
+                    "assets/images/logo.png",
+                    width: 200,
+                    height: 200,
                   ),
 
                   const SizedBox(height: 25),
