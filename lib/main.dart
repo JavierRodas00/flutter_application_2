@@ -7,6 +7,7 @@ import 'package:flutter_application_2/pages/admin/new_producto.dart';
 import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:flutter_application_2/pages/prueba.dart';
 import 'package:flutter_application_2/pages/user/intro_screen.dart';
+import 'package:flutter_application_2/pages/user/shop_page.dart';
 
 /*
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // this is bringing us to the LoginPage first
-      home: LoginPage(),
+      home: MainPage(),
       routes: {
         '/home': (context) => MainPage(),
         '/introScreen': (context) => IntroScreen(),

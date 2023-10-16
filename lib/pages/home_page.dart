@@ -19,11 +19,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: ListView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: Text(
+              "Hola") /* ListView.builder(
           itemCount: 10,
           itemBuilder: (context, index) => Container(
             height: 200,
@@ -33,8 +34,8 @@ class HomePage extends StatelessWidget {
               color: Colors.grey[200],
             ),
           ),
-        ),
-      ),
+        ), */
+          ),
     );
   }
 }

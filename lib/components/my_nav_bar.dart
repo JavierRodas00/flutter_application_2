@@ -6,46 +6,6 @@ import '../pages/about_page.dart';
 
 //Nav Bar
 
-// ignore: must_be_immutable
-class MyBottomNavBar extends StatelessWidget {
-  void Function(int)? onTabChange;
-  MyBottomNavBar({super.key, required this.onTabChange});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color.fromARGB(255, 221, 164, 41),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: GNav(
-        color: Colors.white,
-        activeColor: Colors.white,
-        tabBackgroundColor: Color.fromARGB(255, 242, 180, 47),
-        padding: const EdgeInsets.all(16),
-        gap: 8,
-        onTabChange: (value) => onTabChange!(value),
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: 'Home',
-          ),
-          GButton(
-            icon: Icons.shopping_bag_rounded,
-            text: 'Shop',
-          ),
-          GButton(
-            icon: Icons.person,
-            text: 'Profile',
-          ),
-          GButton(
-            icon: Icons.settings,
-            text: 'Settings',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 //Side Bar
 
 class MyDrawer extends StatelessWidget {

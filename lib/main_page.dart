@@ -1,9 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/pages/user/shop_page.dart';
 import 'components/my_nav_bar.dart';
-import 'pages/home_page.dart';
-import 'pages/profile_page.dart';
-import 'pages/setting_page.dart';
-import 'pages/user/shop_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -13,60 +13,32 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // This selected index is to control the bottom nav bar
-  int _selectedIndex = 0;
-  // This method will update our selected index
-  // when the user taps on the bottom nav bar
-  void navigateBottomBar(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  var primary_color = const Color.fromARGB(255, 238, 170, 43);
 
-  // pages to display
-  final List<Widget> _pages = [
-    // home page
-    const HomePage(),
-
-    // shop page
-    const ShopPage(),
-
-    // profile page
-    const ProfilePage(),
-
-    // setting page
-    const SettingPage(),
-  ];
   @override
   Widget build(BuildContext context) {
-    /*
-
-    UI - I like a more minimal style so that's what I did here, 
-    but you can change up the colors and decorate it to your preference
-
-    */
     return Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
+          elevation: 1,
+          backgroundColor: const Color.fromARGB(255, 238, 170, 43),
           leading: Builder(
             builder: (context) => IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.menu,
-                color: Colors.grey.shade800,
+                color: Colors.white,
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
           ),
-          title: Text(
-            'DeTocho',
-            style: TextStyle(color: Colors.grey.shade800),
+          title: const Text(
+            'deTocho',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           actions: [
             IconButton(
               icon: const Icon(Icons.shopping_cart),
-              color: Colors.grey.shade800, // Icono de la carreta
+              color: Colors.white, // Icono de la carreta
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -74,9 +46,87 @@ class _MainPageState extends State<MainPage> {
           ],
         ),
         drawer: const MyDrawer(),
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: MyBottomNavBar(
-          onTabChange: (index) => navigateBottomBar(index),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+                child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                promocionesCarrousel(),
+                const Divider(),
+                SizedBox(
+                  width: 100,
+                  child: categorias(),
+                ),
+                const Divider(),
+                const ShopPage()
+              ],
+            ))
+          ],
         ));
   }
+}
+
+Widget promocionesCarrousel() {
+  final List<String> imagenes = [
+    'assets/images/promo1.png',
+    'assets/images/promo2.png'
+  ];
+  return CarouselSlider.builder(
+      itemCount: imagenes.length,
+      itemBuilder: (context, index, realIndex) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Image.asset(
+            imagenes[index],
+            fit: BoxFit.fill,
+          ),
+        );
+      },
+      options: CarouselOptions(
+          autoPlay: true,
+          height: 240,
+          autoPlayInterval: const Duration(seconds: 3)));
+}
+
+Widget categorias() {
+  final List<String> categorias = [
+    "categoria 1",
+    "categoria 2",
+    "categoria 3",
+    "categoria 4",
+    "categoria 5",
+    "categoria 6",
+    "categoria 7",
+    "categoria 8"
+  ];
+  return SizedBox(
+    height: 75,
+    width: 200,
+    child: ListView.builder(
+      padding: const EdgeInsets.all(10),
+      scrollDirection: Axis.horizontal,
+      itemCount: categorias.length,
+      itemBuilder: (context, index) {
+        return Card(
+          color: Colors.transparent,
+          elevation: 0,
+          child: Container(
+            width: 125,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.grey,
+            ),
+            child: Text(
+              categorias[index],
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+      },
+    ),
+  );
 }
