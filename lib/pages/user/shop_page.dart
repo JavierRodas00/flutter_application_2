@@ -54,7 +54,7 @@ class _ShopPageState extends State<ShopPage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           var productos = listProductos(snapshot.data!);
           return Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(15),
               child: GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -68,45 +68,54 @@ class _ShopPageState extends State<ShopPage> {
                     return Container(
                         width: 100,
                         height: 100,
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(5),
                         child: Card(
                           color: Colors.transparent,
                           elevation: 0,
                           child: Container(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             width: 125,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Color.fromARGB(171, 201, 165, 46)),
+                                borderRadius: BorderRadius.circular(15),
+                                color:
+                                    const Color.fromARGB(171, 255, 250, 195)),
                             child: Column(
                               children: [
-                                Image.memory(
+                                Expanded(
+                                    child: Image.memory(
                                   ima,
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.fill,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                )),
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                                Text(productos[index].descripcion),
+                                Text(
+                                  productos[index].descripcion,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 ElevatedButton(
                                     onPressed: () => (),
-                                    child: Text(productos[index].precio))
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                            200, 245, 209, 92)),
+                                    child: Text(
+                                      "Q${productos[index].precio}",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ))
                               ],
                             ),
                           ),
                         ));
                   }));
         });
-    /* FutureBuilder(
-              future: _getProducto(),
-              builder: (context, snapshot) {
-
-                return Container();
-              },
-            ) */ /* ==
-            null
-        ? Text("hola")
-        : Text("adios") */
   }
 }
 
@@ -116,17 +125,3 @@ List<Producto> listProductos(data) {
   }
   return productos;
 }
-
-/* Widget mostrarProductos(context){
-  FutureBuilder(
-                future: _getProducto(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  var productos = listProductos(snapshot.data!);
-                  return ListView.builder(
-                    itemCount: productos.length,
-                    itemBuilder: (context, index) {
-                      return Text(productos[index].id_producto);
-                    },
-                  );
-                })
-} */

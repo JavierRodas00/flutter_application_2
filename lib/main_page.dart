@@ -13,7 +13,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  var primary_color = const Color.fromARGB(255, 238, 170, 43);
+  var primary_color = const Color.fromARGB(255, 238, 179, 1);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 1,
-          backgroundColor: const Color.fromARGB(255, 238, 170, 43),
+          backgroundColor: primary_color,
           leading: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
@@ -39,13 +39,16 @@ class _MainPageState extends State<MainPage> {
             IconButton(
               icon: const Icon(Icons.shopping_cart),
               color: Colors.white, // Icono de la carreta
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
+              onPressed: () {},
             )
           ],
         ),
         drawer: const MyDrawer(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: primary_color,
+          child: const Icon(Icons.add),
+        ),
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -87,7 +90,7 @@ Widget promocionesCarrousel() {
       },
       options: CarouselOptions(
           autoPlay: true,
-          height: 240,
+          height: 200,
           autoPlayInterval: const Duration(seconds: 3)));
 }
 
