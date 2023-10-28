@@ -28,4 +28,7 @@ values ('test', 'Test1', 'Test2', '12345678', md5('test'), 1);
 
 select * from usuario;
 select * from producto;
+select * from promociones;
+
+
 delete from producto where id_producto = 6;

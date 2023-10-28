@@ -1,12 +1,16 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'dart:typed_data';
 
-import '../../components/my_buttons.dart';
-import '../../components/my_textfield.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_2/providers/producto_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../../../components/my_buttons.dart';
+import '../../../components/my_textfield.dart';
 
 class NewProducto extends StatefulWidget {
   const NewProducto({super.key});
@@ -22,8 +26,9 @@ class _NewProductoState extends State<NewProducto> {
   TextEditingController id_categoria = TextEditingController();
   TextEditingController imagen_producto = TextEditingController();
 
-  //String _ruta = '';
-  //String _image64 = '';
+  String _image64 = '';
+  Uint8List selectedImage = Uint8List(0);
+  bool aux = false;
 
   void wrongMessage() {
     showDialog(
@@ -45,7 +50,7 @@ class _NewProductoState extends State<NewProducto> {
         });
   }
 
-  Future<void> register() async {
+  void register() {
     showDialog(
       context: context,
       builder: (context) {
@@ -58,77 +63,66 @@ class _NewProductoState extends State<NewProducto> {
         descripcion_producto.text != "" &&
         precio_producto.text != "" &&
         id_categoria.text != "") {
-      String url = "http://localhost/apiSP2/admin/agregar_producto.php";
-      try {
-        var res = await http.post(Uri.parse(url), body: {
-          "nombre_producto": nombre_producto.text,
-          "descripcion": descripcion_producto.text,
-          "precio": precio_producto.text,
-          "id_categoria": id_categoria.text,
-        });
-
-        var response = jsonDecode(res.body);
-        if (response["success"] == "true") {
-          print("Usuario registrado correctamente");
-          Navigator.pop(context);
-          Navigator.pop(context);
-          successfulAdd();
-        } else {
-          Navigator.pop(context);
-          print("Error registrar usuario");
-          wrongMessage();
-        }
-      } catch (e) {
-        print(e);
-        Navigator.pop(context);
-        wrongMessage();
-      }
+      context.read<ProductoProvider>().insert(
+          context,
+          nombre_producto.text,
+          descripcion_producto.text,
+          precio_producto.text,
+          id_categoria.text,
+          _image64);
+      Navigator.pop(context);
     } else {
       Navigator.pop(context);
       print("Llene todos los campos");
       wrongMessage();
     }
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    FilePickerResult? result;
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[300],
         body: SafeArea(
             child: Column(
           children: [
-            Container(
-              child: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
             Center(
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //const SizedBox(height: 50),
-
-                    // logo
-                    /*Icon(
-                      Icons.inventory_2,
-                      size: 100,
-                      color: Colors.grey[900],
-                    ),*/
-
                     const SizedBox(height: 25),
 
-                    /*MyUploadImageButton(
-                      imagePath: _ruta,
-                      controller: imagen_producto,
-                      onTap: () {
-                        print('hola');
+                    MyUploadImageButton(
+                      onTap: () async {
+                        result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['jpg', 'png', 'jpeg'],
+                        );
+                        if (result == null) {
+                          print("No file selected");
+                        } else {
+                          setState(() {
+                            selectedImage = result!.files[0].bytes!;
+                            aux = true;
+                          });
+
+                          _image64 = base64Encode(selectedImage);
+                        }
                       },
-                    ),*/
+                      controller: imagen_producto,
+                      imagePath: selectedImage,
+                      aux: aux,
+                    ),
 
                     const SizedBox(height: 25),
                     // email textfield

@@ -6,8 +6,9 @@ class Producto {
   String descripcion = "";
   String precio = "";
   String categoria = "";
+  String id_categoria = "";
   String imagen = "";
 
   Producto(this.id_producto, this.nombre_produto, this.descripcion, this.precio,
-      this.categoria, this.imagen);
+      this.categoria, this.imagen, this.id_categoria);
 }

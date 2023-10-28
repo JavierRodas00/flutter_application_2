@@ -84,6 +84,12 @@ create table pedido_producto(
     primary key(id_pedido,id_producto)
 );
 
+create table promociones(
+	id_promocion int auto_increment,
+    imagen longtext,
+    primary key(id_promocion)
+);
+
 
 
 

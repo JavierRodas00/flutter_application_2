@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter_application_2/pages/admin/new_producto.dart';
+import 'package:flutter_application_2/home_page.dart';
+import 'package:flutter_application_2/pages/admin/productos/new_producto.dart';
 import 'package:flutter_application_2/pages/admin/update_producto.dart';
+import 'package:flutter_application_2/providers/usuario_provider.dart';
+import 'package:provider/provider.dart';
 import '../pages/about_page.dart';
 
 //Nav Bar
@@ -30,8 +32,33 @@ class MyDrawer extends StatelessWidget {
           const DrawerHeader(
             child: Center(
               child: Icon(
-                Icons.phone_iphone_rounded,
+                Icons.person,
                 size: 64,
+              ),
+            ),
+          ),
+          Text(
+              "${context.watch<UsuarioProvider>().nombre} ${context.watch<UsuarioProvider>().apellido}"),
+
+          const SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              },
+              child: ListTile(
+                leading: const Icon(Icons.home),
+                title: Text(
+                  "Inicio",
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
               ),
             ),
           ),

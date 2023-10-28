@@ -39,10 +39,10 @@ dependencies:
   dio: ^4.0.0
   google_nav_bar: ^5.0.6
   file_picker: ^5.5.0
-  image_picker:
   path_provider:
   provider: ^6.0.5
   carousel_slider: ^4.2.1
+  flutter_speed_dial:
 
 dev_dependencies:
   flutter_test:

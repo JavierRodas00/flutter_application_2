@@ -1,25 +1,25 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main_page.dart';
+import 'package:flutter_application_2/home_page.dart';
 import 'package:flutter_application_2/pages/about_page.dart';
-import 'package:flutter_application_2/pages/admin/new_producto.dart';
+import 'package:flutter_application_2/pages/admin/productos/new_producto.dart';
+import 'package:flutter_application_2/pages/admin/productos/productosIndex.dart';
 import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:flutter_application_2/pages/prueba.dart';
 import 'package:flutter_application_2/pages/user/intro_screen.dart';
-import 'package:flutter_application_2/pages/user/shop_page.dart';
+import 'package:flutter_application_2/providers/producto_provider.dart';
+import 'package:flutter_application_2/providers/usuario_provider.dart';
+import 'package:provider/provider.dart';
 
-/*
-
-S T A R T
-
-This is the starting point for all apps. 
-Everything starts at the main function
-
-*/
 void main() async {
-  // lets run our app
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => UsuarioProvider()),
+      ChangeNotifierProvider(create: (_) => ProductoProvider())
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,15 +27,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ProductoProvider>().start();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // this is bringing us to the LoginPage first
-      home: MainPage(),
+      home: ProductosPageAdmin(),
       routes: {
-        '/home': (context) => MainPage(),
+        '/home': (context) => HomePage(),
         '/introScreen': (context) => IntroScreen(),
         '/about': (context) => AboutPage(),
         '/prueba': (context) => Prueba(),
+        '/producto': (context) => ProductosPageAdmin(),
         '/agregar_producto': (context) => NewProducto(),
       },
     );

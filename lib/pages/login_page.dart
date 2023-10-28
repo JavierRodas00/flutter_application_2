@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/loading.dart';
 import 'package:flutter_application_2/pages/new_user_page.dart';
+import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../../components/my_buttons.dart';
 import '../components/my_textfield.dart';
 
@@ -20,7 +22,12 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController correo_usuario = TextEditingController();
   TextEditingController password_usuario = TextEditingController();
 
-  Future<void> navegar_new_user() {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  navegar_new_user() {
     return Navigator.push(
       context,
       MaterialPageRoute(
@@ -59,8 +66,11 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-    if (correo_usuario.text != "" && password_usuario.text != "") {
+
+    //Verificar que los campos correo y password esten lleno
+    if (correo_usuario.text.isNotEmpty && password_usuario.text.isNotEmpty) {
       String url = "http://localhost/apiSP2/user/login.php";
+      //Mandar a llamar a API
       try {
         var res = await http.post(Uri.parse(url), body: {
           "correo_usuario": correo_usuario.text,
@@ -70,13 +80,19 @@ class _LoginPageState extends State<LoginPage> {
         if (res.statusCode == 200) {
           var response = jsonDecode(res.body);
           for (var aux in response) {
-            print("Login correctamente");
+            print("Login usuario: ${aux["id_usuario"]}");
             correo_usuario.clear();
             password_usuario.clear();
             Navigator.pop(context);
             if (aux["admin_usuario"] == "1") {
+              context
+                  .read<UsuarioProvider>()
+                  .set(1, aux["nombre_usuario"], aux["apellido_usuario"]);
               Navigator.pushNamed(context, '/home');
             } else {
+              context
+                  .read<UsuarioProvider>()
+                  .set(0, aux["nombre_usuario"], aux["apellido_usuario"]);
               Navigator.pushNamed(context, '/introScreen');
             }
           }
@@ -90,9 +106,10 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pop(context);
         wrongLoginMessage();
       }
-    } else {
+    }
+    //Si los campos correo y password no estan llenos mostrar mensaje de error
+    else {
       Navigator.pop(context);
-      print("Llene todos los campos");
       errorMessage();
     }
   }
@@ -102,114 +119,119 @@ class _LoginPageState extends State<LoginPage> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
+        body: Body(),
+      ),
+    );
+  }
 
-                  // logo
-                  Image.asset(
-                    "assets/images/logo.png",
-                    width: 200,
-                    height: 200,
-                  ),
+//body
+  SafeArea Body() {
+    return SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 50),
 
-                  const SizedBox(height: 25),
-
-                  // email textfield
-                  MyTextField(
-                    controller: correo_usuario,
-                    hintText: 'Correo',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: password_usuario,
-                    hintText: 'Contraseña',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Olvidó su contraseña?',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // sign in button
-                  MyLoginButton(
-                    onTap: signUserIn,
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  MyNewUserButton(
-                    onTap: navegar_new_user,
-                  ),
-
-                  /* // or continue with
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'O continúa con',
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // google + apple sign in buttons
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // google button
-                      SquareTile(imagePath: 'lib/images/google.png'),
-
-                      SizedBox(width: 25),
-
-                      // apple button
-                      SquareTile(imagePath: 'lib/images/apple.png')
-                    ],
-                  ),*/
-                ],
+              // logo
+              Image.asset(
+                "assets/images/logo.png",
+                width: 200,
+                height: 200,
               ),
-            ),
+
+              const SizedBox(height: 25),
+
+              // email textfield
+              MyTextField(
+                controller: correo_usuario,
+                hintText: 'Correo',
+                obscureText: false,
+              ),
+
+              const SizedBox(height: 10),
+
+              // password textfield
+              MyTextField(
+                controller: password_usuario,
+                hintText: 'Contraseña',
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 10),
+
+              // forgot password?
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Olvidó su contraseña?',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 25),
+
+              // sign in button
+              MyLoginButton(
+                onTap: signUserIn,
+              ),
+
+              const SizedBox(height: 50),
+
+              MyNewUserButton(
+                onTap: navegar_new_user,
+              ),
+
+              /* // or continue with
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'O continúa con',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 50),
+
+                // google + apple sign in buttons
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // google button
+                    SquareTile(imagePath: 'lib/images/google.png'),
+
+                    SizedBox(width: 25),
+
+                    // apple button
+                    SquareTile(imagePath: 'lib/images/apple.png')
+                  ],
+                ),*/
+            ],
           ),
         ),
       ),
