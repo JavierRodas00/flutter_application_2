@@ -18,7 +18,6 @@ class ProductoProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       for (var prod in res) {
-        //print(prod["id_producto"]);
         _productos.add(Producto(
             prod["id_producto"],
             prod["nombre_producto"],
