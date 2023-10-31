@@ -31,4 +31,4 @@ select * from producto;
 select * from promociones;
 
 
-delete from producto where id_producto = 6;
+delete from producto where id_producto > 6;

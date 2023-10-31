@@ -29,18 +29,29 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         children: [
           // Drawer header
-          const DrawerHeader(
-            child: Center(
-              child: Icon(
-                Icons.person,
-                size: 64,
-              ),
+          DrawerHeader(
+            child: Column(
+              children: [
+                const Expanded(
+                  child: Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 64,
+                    ),
+                  ),
+                ),
+
+                //Nombre Apellido usuario actual
+                Center(
+                  child: Text(
+                      "${context.watch<UsuarioProvider>().nombre} ${context.watch<UsuarioProvider>().apellido}"),
+                )
+              ],
             ),
           ),
-          Text(
-              "${context.watch<UsuarioProvider>().nombre} ${context.watch<UsuarioProvider>().apellido}"),
 
           const SizedBox(height: 25),
+          //Inicio button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: GestureDetector(
@@ -63,51 +74,7 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 25),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NewProducto(),
-                  ),
-                );
-              },
-              child: ListTile(
-                leading: const Icon(Icons.inventory_2),
-                title: Text(
-                  "Agregar Producto",
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-              ),
-            ),
-          ),
-          //Update producto
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const UpdateProducto(),
-                  ),
-                );
-              },
-              child: ListTile(
-                leading: const Icon(Icons.inventory_2),
-                title: Text(
-                  "Actualizar Producto",
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-              ),
-            ),
-          ),
-          // ABOUT PAGE
+          // ABOUT PAGE button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: GestureDetector(
@@ -130,19 +97,23 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          // LOGOUT BUTTON
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: ListTile(
-              leading: const Icon(Icons.logout),
-              onTap: () => logUserOut(context),
-              title: Text(
-                "L O G O U T",
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-            ),
-          ),
+          logoutButton(context),
         ],
+      ),
+    );
+  }
+
+  //Logout button
+  Padding logoutButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: ListTile(
+        leading: const Icon(Icons.logout),
+        onTap: () => logUserOut(context),
+        title: Text(
+          "L O G O U T",
+          style: TextStyle(color: Colors.grey[700]),
+        ),
       ),
     );
   }

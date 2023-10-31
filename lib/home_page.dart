@@ -47,9 +47,10 @@ class _HomePageState extends State<HomePage> {
       children: [
         SpeedDialChild(
             child: const Icon(Icons.inventory),
+            label: "Productos",
             onTap: () {
               Navigator.pushNamed(context, '/producto');
-            })
+            }),
       ],
     );
   }

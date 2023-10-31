@@ -66,7 +66,7 @@ class _ShopPageState extends State<ShopPage> {
                   ima,
                   width: 100,
                   height: 100,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 )),
                 const SizedBox(
                   height: 20,
@@ -118,7 +118,7 @@ class _ShopPageState extends State<ShopPage> {
                     ima,
                     width: 100,
                     height: 100,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   )),
                   const SizedBox(
                     height: 20,

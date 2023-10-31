@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print, no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
 
@@ -6,6 +6,8 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/model/Categoria.dart';
+import 'package:flutter_application_2/providers/categoria_provider.dart';
 import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ class NewProducto extends StatefulWidget {
 }
 
 class _NewProductoState extends State<NewProducto> {
+  List<Categoria> _categorias = [];
   TextEditingController nombre_producto = TextEditingController();
   TextEditingController descripcion_producto = TextEditingController();
   TextEditingController precio_producto = TextEditingController();
@@ -82,7 +85,7 @@ class _NewProductoState extends State<NewProducto> {
   @override
   Widget build(BuildContext context) {
     FilePickerResult? result;
-
+    _categorias = context.watch<CategoriaProvider>().categorias;
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[300],
@@ -153,11 +156,7 @@ class _NewProductoState extends State<NewProducto> {
                     const SizedBox(height: 10),
 
                     // password textfield
-                    MyTextField(
-                      controller: id_categoria,
-                      hintText: 'Categoria',
-                      obscureText: false,
-                    ),
+                    seleccionarCategoria(context),
 
                     const SizedBox(height: 10),
 
@@ -171,6 +170,31 @@ class _NewProductoState extends State<NewProducto> {
             ),
           ],
         )),
+      ),
+    );
+  }
+
+  Widget seleccionarCategoria(context) {
+    //print(_categorias.first.id_categoria);
+    String dropdownValue = "0";
+    return Center(
+      child: DropdownButton<String>(
+        value: dropdownValue,
+        style: const TextStyle(color: Colors.black),
+        underline: Container(
+          height: 2,
+          color: Colors.black,
+        ),
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownValue = newValue!;
+          });
+        },
+        items: [
+          DropdownMenuItem(value: "0", child: Text("One")),
+          DropdownMenuItem(value: 'Two', child: Text("Two")),
+          DropdownMenuItem(value: 'Three', child: Text("Three"))
+        ],
       ),
     );
   }

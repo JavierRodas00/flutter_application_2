@@ -93,3 +93,6 @@ create table promociones(
 
 
 
+select * from producto;
+update producto set id_categoria = 1 where id_producto = 10;
+select * from categoria;
