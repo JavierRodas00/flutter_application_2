@@ -7,6 +7,7 @@ import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:http/http.dart' as http;
 import '../../components/my_buttons.dart';
 import '../components/my_textfield.dart';
+import 'package:email_validator/email_validator.dart';
 
 class NewUser extends StatefulWidget {
   const NewUser({super.key});
@@ -52,7 +53,7 @@ class _NewUserState extends State<NewUser> {
         );
       },
     );
-    if (correo_usuario.text != "" &&
+    if (Validate(correo_usuario.text) &&
         password_usuario.text != "" &&
         nombre_usuario.text != "" &&
         apellido_usuario.text != "" &&
@@ -172,5 +173,10 @@ class _NewUserState extends State<NewUser> {
         ),
       ),
     );
+  }
+
+  bool Validate(String email) {
+    bool isvalid = EmailValidator.validate(email);
+    return isvalid;
   }
 }
