@@ -22,16 +22,18 @@ class NewProducto extends StatefulWidget {
 }
 
 class _NewProductoState extends State<NewProducto> {
-  List<Categoria> _categorias = [];
   TextEditingController nombre_producto = TextEditingController();
   TextEditingController descripcion_producto = TextEditingController();
   TextEditingController precio_producto = TextEditingController();
-  TextEditingController id_categoria = TextEditingController();
   TextEditingController imagen_producto = TextEditingController();
 
   String _image64 = '';
   Uint8List selectedImage = Uint8List(0);
   bool aux = false;
+  late var aux1;
+
+  List<Categoria> categorias = [];
+  late Categoria dropdownValue;
 
   void wrongMessage() {
     showDialog(
@@ -53,7 +55,7 @@ class _NewProductoState extends State<NewProducto> {
         });
   }
 
-  void register() {
+  register() {
     showDialog(
       context: context,
       builder: (context) {
@@ -64,14 +66,14 @@ class _NewProductoState extends State<NewProducto> {
     );
     if (nombre_producto.text != "" &&
         descripcion_producto.text != "" &&
-        precio_producto.text != "" &&
-        id_categoria.text != "") {
+        precio_producto.text != "") {
+      print(aux1.id_categoria);
       context.read<ProductoProvider>().insert(
           context,
           nombre_producto.text,
           descripcion_producto.text,
           precio_producto.text,
-          id_categoria.text,
+          aux1.id_categoria,
           _image64);
       Navigator.pop(context);
     } else {
@@ -80,12 +82,14 @@ class _NewProductoState extends State<NewProducto> {
       wrongMessage();
     }
     Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     FilePickerResult? result;
-    _categorias = context.watch<CategoriaProvider>().categorias;
+    categorias = context.watch<CategoriaProvider>().categorias;
+    dropdownValue = categorias[0];
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[300],
@@ -155,8 +159,43 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    // password textfield
-                    seleccionarCategoria(context),
+                    // password textfield;
+                    Center(
+                      child: DropdownMenu<Categoria>(
+                        initialSelection: categorias.first,
+                        onSelected: (value) {
+                          aux1 = value!;
+                          setState(() {
+                            dropdownValue = value;
+                          });
+                        },
+                        dropdownMenuEntries: categorias
+                            .map<DropdownMenuEntry<Categoria>>(
+                                (Categoria value) {
+                          return DropdownMenuEntry<Categoria>(
+                              value: value, label: value.descripcion_categoria);
+                        }).toList(),
+                      ),
+                    ),
+                    /* Center(
+                      child: DropdownButton<Categoria>(
+                          value: categorias.first,
+                          style: const TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (Categoria? newValue) {
+                            dropdownValue = newValue!;
+                          },
+                          items:
+                              categorias.map<DropdownMenuItem<Categoria>>((e) {
+                            return DropdownMenuItem(
+                              value: e,
+                              child: Text(e.descripcion_categoria),
+                            );
+                          }).toList()),
+                    ), */
 
                     const SizedBox(height: 10),
 
@@ -174,28 +213,26 @@ class _NewProductoState extends State<NewProducto> {
     );
   }
 
-  Widget seleccionarCategoria(context) {
-    //print(_categorias.first.id_categoria);
-    String dropdownValue = "0";
+  /* Center seleccionarCategoria() {
     return Center(
-      child: DropdownButton<String>(
-        value: dropdownValue,
-        style: const TextStyle(color: Colors.black),
-        underline: Container(
-          height: 2,
-          color: Colors.black,
-        ),
-        onChanged: (String? newValue) {
-          setState(() {
-            dropdownValue = newValue!;
-          });
-        },
-        items: [
-          DropdownMenuItem(value: "0", child: Text("One")),
-          DropdownMenuItem(value: 'Two', child: Text("Two")),
-          DropdownMenuItem(value: 'Three', child: Text("Three"))
-        ],
-      ),
+      child: DropdownButton<Categoria>(
+          value: dropdownValue,
+          style: const TextStyle(color: Colors.black),
+          underline: Container(
+            height: 2,
+            color: Colors.black,
+          ),
+          onChanged: (Categoria? newValue) {
+            setState(() {
+              dropdownValue = newValue!;
+            });
+          },
+          items: categorias.map<DropdownMenuItem<Categoria>>((e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(e.descripcion_categoria),
+            );
+          }).toList()),
     );
-  }
+  } */
 }
