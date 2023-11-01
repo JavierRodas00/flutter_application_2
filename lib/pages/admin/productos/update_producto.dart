@@ -30,7 +30,7 @@ class _NewProductoState extends State<NewProducto> {
   String _image64 = '';
   Uint8List selectedImage = Uint8List(0);
   bool aux = false;
-  late Categoria aux1;
+  late var aux1;
 
   List<Categoria> categorias = [];
   late Categoria dropdownValue;
@@ -89,7 +89,6 @@ class _NewProductoState extends State<NewProducto> {
     FilePickerResult? result;
     categorias = context.watch<CategoriaProvider>().categorias;
     dropdownValue = categorias[0];
-    aux1 = dropdownValue;
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[300],
@@ -132,7 +131,7 @@ class _NewProductoState extends State<NewProducto> {
                     ),
 
                     const SizedBox(height: 25),
-                    // Nombre producto
+                    // email textfield
                     MyTextField(
                       controller: nombre_producto,
                       hintText: 'Producto',
@@ -141,7 +140,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    // Descripcion producto
+                    // password textfield
                     MyTextArea(
                       controller: descripcion_producto,
                       hintText: 'Descripcion',
@@ -150,7 +149,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    // Precio producto
+                    // password textfield
                     MyTextField(
                       controller: precio_producto,
                       hintText: 'Precio',
@@ -159,7 +158,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    // Seleccion de categoria
+                    // password textfield;
                     Center(
                       child: DropdownMenu<Categoria>(
                         initialSelection: categorias.first,
@@ -180,8 +179,8 @@ class _NewProductoState extends State<NewProducto> {
 
                     const SizedBox(height: 10),
 
-                    // Boton de registrar
                     MyRegisterButton(onTap: register),
+                    // sign in button
 
                     const SizedBox(height: 50),
                   ],

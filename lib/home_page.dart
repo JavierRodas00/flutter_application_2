@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/appbar.dart';
+import 'package:flutter_application_2/model/Carrito_model.dart';
+import 'package:flutter_application_2/pages/admin/productos/productosIndex.dart';
 import 'package:flutter_application_2/pages/user/shop_page.dart';
+import 'package:flutter_application_2/providers/carrito_provider.dart';
 import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     if (context.watch<UsuarioProvider>().admin == 1) {
       return Scaffold(
           backgroundColor: Colors.white,
-          appBar: appBar(),
+          appBar: appBar(context),
           drawer: const MyDrawer(),
           floatingActionButton: Actionbutton(),
           body: Body());
@@ -34,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     else {
       return Scaffold(
           backgroundColor: Colors.white,
-          appBar: appBar(),
+          appBar: appBar(context),
           drawer: const MyDrawer(),
           body: Body());
     }
@@ -49,6 +52,7 @@ class _HomePageState extends State<HomePage> {
             child: const Icon(Icons.inventory),
             label: "Productos",
             onTap: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/producto');
             }),
       ],
@@ -72,7 +76,7 @@ class _HomePageState extends State<HomePage> {
               child: categorias(),
             ),
             const Divider(),
-            const ShopPage()
+            const ShopPage(),
           ],
         ))
       ],

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -13,17 +15,14 @@ import 'package:provider/provider.dart';
 class ProductosPageAdmin extends StatelessWidget {
   ProductosPageAdmin({super.key});
 
-  List<Producto> _productos = [];
+  List<ProductoModel> _productos = [];
   @override
   Widget build(BuildContext context) {
     _productos = context.watch<ProductoProvider>().productos;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: appBar(),
-        drawer: const MyDrawer(),
-        body: body(context),
-      ),
+    return Scaffold(
+      appBar: appBar(context),
+      drawer: const MyDrawer(),
+      body: body(context),
     );
   }
 
@@ -115,7 +114,9 @@ class ProductosPageAdmin extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      modificar(_productos[index].id_producto);
+                                    },
                                     child: const Icon(Icons.edit)),
                               ),
                             ),
@@ -123,7 +124,9 @@ class ProductosPageAdmin extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      delete(_productos[index].id_producto);
+                                    },
                                     child: const Icon(Icons.delete)),
                               ),
                             ),
@@ -137,5 +140,13 @@ class ProductosPageAdmin extends StatelessWidget {
         )),
       ],
     );
+  }
+
+  delete(id) {
+    print("Eliminar producto id: $id");
+  }
+
+  modificar(id) {
+    print("Modificar producto id: $id");
   }
 }

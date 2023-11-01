@@ -72,12 +72,7 @@ class _NewUserState extends State<NewUser> {
         if (response["success"] == "true") {
           print("Usuario registrado correctamente");
           Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
-          );
+          Navigator.pop(context);
         } else {
           Navigator.pop(context);
           print("Error registrar usuario");
@@ -101,74 +96,84 @@ class _NewUserState extends State<NewUser> {
       home: Scaffold(
         backgroundColor: Colors.grey[300],
         body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-
-                  // logo
-                  Icon(
-                    Icons.person_add,
-                    size: 100,
-                    color: Colors.grey[900],
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // email textfield
-                  MyTextField(
-                    controller: correo_usuario,
-                    hintText: 'Correo',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: nombre_usuario,
-                    hintText: 'Nombre',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: apellido_usuario,
-                    hintText: 'Apellido',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: telefono_usuario,
-                    hintText: 'Telefono',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: password_usuario,
-                    hintText: 'Contraseña',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  MyRegisterButton(onTap: register),
-                  // sign in button
-
-                  const SizedBox(height: 50),
-                ],
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-            ),
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 50),
+
+                      // logo
+                      Icon(
+                        Icons.person_add,
+                        size: 100,
+                        color: Colors.grey[900],
+                      ),
+
+                      const SizedBox(height: 25),
+
+                      // email textfield
+                      MyTextField(
+                        controller: correo_usuario,
+                        hintText: 'Correo',
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // password textfield
+                      MyTextField(
+                        controller: nombre_usuario,
+                        hintText: 'Nombre',
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // password textfield
+                      MyTextField(
+                        controller: apellido_usuario,
+                        hintText: 'Apellido',
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // password textfield
+                      MyTextField(
+                        controller: telefono_usuario,
+                        hintText: 'Telefono',
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // password textfield
+                      MyTextField(
+                        controller: password_usuario,
+                        hintText: 'Contraseña',
+                        obscureText: true,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      MyRegisterButton(onTap: register),
+                      // sign in button
+
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

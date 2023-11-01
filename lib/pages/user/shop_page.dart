@@ -3,6 +3,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/providers/carrito_provider.dart';
 import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -16,7 +17,7 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  List<Producto> _productos = [];
+  List<ProductoModel> _productos = [];
   int _selectedCategoria = 0;
   @override
   void initState() {
@@ -79,7 +80,9 @@ class _ShopPageState extends State<ShopPage> {
                   height: 20,
                 ),
                 ElevatedButton(
-                    onPressed: () => (),
+                    onPressed: () {
+                      agregar(context, _productos[index]);
+                    },
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(200, 245, 209, 92)),
@@ -131,7 +134,9 @@ class _ShopPageState extends State<ShopPage> {
                     height: 20,
                   ),
                   ElevatedButton(
-                      onPressed: () => (),
+                      onPressed: () {
+                        agregar(context, _productos[index]);
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(200, 245, 209, 92)),
@@ -149,10 +154,14 @@ class _ShopPageState extends State<ShopPage> {
     }
   }
 
-  List<Producto> listProductos(data) {
+  List<ProductoModel> listProductos(data) {
     for (var producto in data) {
       _productos.add(producto);
     }
     return _productos;
+  }
+
+  agregar(BuildContext context, producto) {
+    context.read<CarritoProvider>().agregar(producto);
   }
 }

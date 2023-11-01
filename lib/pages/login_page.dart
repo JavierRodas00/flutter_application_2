@@ -28,12 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   navegar_new_user() {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const NewUser(),
-      ),
-    );
+    Navigator.pushNamed(context, '/register');
   }
 
   void wrongLoginMessage() {
@@ -83,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
             print("Login usuario: ${aux["id_usuario"]}");
             correo_usuario.clear();
             password_usuario.clear();
+            // pop loading
             Navigator.pop(context);
             if (aux["admin_usuario"] == "1") {
               context
@@ -97,18 +93,21 @@ class _LoginPageState extends State<LoginPage> {
             }
           }
         } else {
+          // pop loading
           Navigator.pop(context);
           print("Error Login");
           wrongLoginMessage();
         }
       } catch (e) {
         print(e);
+        // pop loading
         Navigator.pop(context);
         wrongLoginMessage();
       }
     }
     //Si los campos correo y password no estan llenos mostrar mensaje de error
     else {
+      // pop loading
       Navigator.pop(context);
       errorMessage();
     }

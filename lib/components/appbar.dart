@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //AppBar
-AppBar appBar() {
+AppBar appBar(BuildContext context) {
   const primaryColor = Color.fromARGB(255, 238, 179, 1);
   return AppBar(
     elevation: 1,
@@ -23,7 +23,10 @@ AppBar appBar() {
       IconButton(
         icon: const Icon(Icons.shopping_cart),
         color: Colors.white, // Icono de la carreta
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, '/carrito');
+        },
       )
     ],
   );

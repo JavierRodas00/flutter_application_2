@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/home_page.dart';
-import 'package:flutter_application_2/pages/admin/productos/new_producto.dart';
-import 'package:flutter_application_2/pages/admin/update_producto.dart';
+import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:provider/provider.dart';
 import '../pages/about_page.dart';
@@ -56,13 +55,12 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: GestureDetector(
               onTap: () {
+                // pop drawer
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
+                // pop screen
+                Navigator.pop(context);
+                // push new screen
+                Navigator.pushNamed(context, '/home');
               },
               child: ListTile(
                 leading: const Icon(Icons.home),
@@ -80,6 +78,7 @@ class MyDrawer extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(

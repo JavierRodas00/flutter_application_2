@@ -7,18 +7,19 @@ import 'package:flutter_application_2/model/Productos_model.dart';
 import 'package:http/http.dart' as http;
 
 class ProductoProvider with ChangeNotifier {
-  List<Producto> _productos = [];
+  List<ProductoModel> _productos = [];
 
-  List<Producto> get productos => _productos;
+  List<ProductoModel> get productos => _productos;
 
   void start() async {
+    _productos = [];
     String url = "http://localhost/apiSP2/user/get_producto.php";
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
       for (var prod in res) {
-        _productos.add(Producto(
+        _productos.add(ProductoModel(
             prod["id_producto"],
             prod["nombre_producto"],
             prod["descripcion"],
@@ -54,7 +55,7 @@ class ProductoProvider with ChangeNotifier {
       });
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
-        _productos.add(Producto(
+        _productos.add(ProductoModel(
             response["id"].toString(),
             nombreProducto,
             descripcionProducto,
@@ -64,6 +65,39 @@ class ProductoProvider with ChangeNotifier {
             idCategoria));
         print("Producto ${response["id"].toString()} registrado");
         Navigator.pop(context);
+      } else {
+        print("ERROR: nuevo producto");
+      }
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  void modificar(id_producto, nombreProducto, descripcionProducto,
+      precioProducto, idCategoria, image64) async {
+    String url = "http://localhost/apiSP2/admin/update_producto.php";
+    try {
+      var res = await http.post(Uri.parse(url), body: {
+        "id_producto": id_producto,
+        "nombre_producto": nombreProducto,
+        "descripcion": descripcionProducto,
+        "precio": precioProducto,
+        "imagen_producto": image64,
+        "id_categoria": idCategoria
+      });
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        //agregar que pasa cuando se modifica
+        /* _productos.add(Producto(
+            response["id"].toString(),
+            nombreProducto,
+            descripcionProducto,
+            precioProducto,
+            idCategoria,
+            image64,
+            idCategoria));
+        print("Producto ${response["id"].toString()} registrado"); */
       } else {
         print("ERROR: nuevo producto");
       }
