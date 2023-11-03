@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/home_page.dart';
+import 'package:flutter_application_2/pages/new_direccion_page.dart';
+import 'package:flutter_application_2/pages/user/home_page.dart';
 import 'package:flutter_application_2/pages/about_page.dart';
+import 'package:flutter_application_2/pages/admin/categorias/categoriasIndex.dart';
+import 'package:flutter_application_2/pages/admin/categorias/new_categoria.dart';
+import 'package:flutter_application_2/pages/admin/home_page_admin.dart';
 import 'package:flutter_application_2/pages/admin/productos/new_producto.dart';
 import 'package:flutter_application_2/pages/admin/productos/productosIndex.dart';
 import 'package:flutter_application_2/pages/login_page.dart';
@@ -38,14 +42,26 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
       routes: {
+        // ********** TODOS **********
         '/login': (context) => MyApp(),
+        //'/register': (context) => NewDirection("1"),
         '/register': (context) => NewUser(),
         '/home': (context) => HomePage(),
-        '/introScreen': (context) => IntroScreen(),
         '/about': (context) => AboutPage(),
-        '/producto': (context) => ProductosPageAdmin(),
         '/carrito': (context) => CartPage(),
+
+        // ********** USER **********
+        '/introScreen': (context) => IntroScreen(),
+
+        // ********** ADMIN **********
+        // Productos
+        '/ahome': (context) => AdminHomePage(),
+        '/producto': (context) => ProductosPageAdmin(),
         '/agregar_producto': (context) => NewProducto(),
+
+        // Categoria
+        '/categoria': (context) => CategoriasPageAdmin(),
+        '/agregar_categoria': (context) => NewCategoria()
       },
     );
   }

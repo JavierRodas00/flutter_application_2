@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/model/Categoria.dart';
+import 'package:flutter_application_2/model/Categoria_model.dart';
 import 'package:flutter_application_2/providers/categoria_provider.dart';
 import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +32,8 @@ class _NewProductoState extends State<NewProducto> {
   bool aux = false;
   late var aux1;
 
-  List<Categoria> categorias = [];
-  late Categoria dropdownValue;
+  List<CategoriaModel> categorias = [];
+  late CategoriaModel dropdownValue;
 
   void wrongMessage() {
     showDialog(
@@ -67,13 +67,13 @@ class _NewProductoState extends State<NewProducto> {
     if (nombre_producto.text != "" &&
         descripcion_producto.text != "" &&
         precio_producto.text != "") {
-      print(aux1.id_categoria);
+      //print(aux1.id_categoria);
       context.read<ProductoProvider>().insert(
-          context,
           nombre_producto.text,
           descripcion_producto.text,
           precio_producto.text,
           aux1.id_categoria,
+          aux1.descripcion_categoria,
           _image64);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -160,7 +160,7 @@ class _NewProductoState extends State<NewProducto> {
 
                     // password textfield;
                     Center(
-                      child: DropdownMenu<Categoria>(
+                      child: DropdownMenu<CategoriaModel>(
                         initialSelection: categorias.first,
                         onSelected: (value) {
                           aux1 = value!;
@@ -169,9 +169,9 @@ class _NewProductoState extends State<NewProducto> {
                           });
                         },
                         dropdownMenuEntries: categorias
-                            .map<DropdownMenuEntry<Categoria>>(
-                                (Categoria value) {
-                          return DropdownMenuEntry<Categoria>(
+                            .map<DropdownMenuEntry<CategoriaModel>>(
+                                (CategoriaModel value) {
+                          return DropdownMenuEntry<CategoriaModel>(
                               value: value, label: value.descripcion_categoria);
                         }).toList(),
                       ),

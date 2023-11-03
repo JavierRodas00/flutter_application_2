@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/home_page.dart';
-import 'package:flutter_application_2/pages/login_page.dart';
 import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:provider/provider.dart';
 import '../pages/about_page.dart';
-
-//Nav Bar
-
-//Side Bar
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -23,6 +17,7 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int admin = context.watch<UsuarioProvider>().admin;
     return Drawer(
       backgroundColor: Colors.grey[300],
       child: Column(
@@ -60,7 +55,11 @@ class MyDrawer extends StatelessWidget {
                 // pop screen
                 Navigator.pop(context);
                 // push new screen
-                Navigator.pushNamed(context, '/home');
+                if (admin == 1) {
+                  Navigator.pushNamed(context, '/ahome');
+                } else {
+                  Navigator.pushNamed(context, '/home');
+                }
               },
               child: ListTile(
                 leading: const Icon(Icons.home),

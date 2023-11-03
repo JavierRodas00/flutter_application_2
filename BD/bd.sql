@@ -10,13 +10,13 @@ create table genero(
 
 create table usuario(
 	id_usuario int auto_increment,
-    correo_usuario varchar(200) unique,
-    nombre_usuario varchar(200),
-    apellido_usuario varchar(200),
+    correo_usuario varchar(200) unique not null,
+    nombre_usuario varchar(200) not null,
+    apellido_usuario varchar(200) not null,
     id_genero char(1),
     fecha_nac date,
     telefono_usuario varchar(10),
-    password_usuario varchar(200),
+    password_usuario varchar(200) not null,
     admin_usuario char(1) default 0,
     primary key(id_usuario),
     foreign key (id_genero) references genero(id_genero)
@@ -24,7 +24,7 @@ create table usuario(
 
 create table edificio(
 	id_edificio int auto_increment,
-    nombre_edificio varchar(100),
+    nombre_edificio varchar(100) not null,
     avenida_edificio char(20),
     calle_edificio char(20),
     numero_edificio char(10),
@@ -34,39 +34,29 @@ create table edificio(
 
 create table categoria(
 	id_categoria int auto_increment,
-    descripcion_categoria varchar(50),
+    descripcion_categoria varchar(50) not null,
     primary key(id_categoria)
 );
 
-create table imagen(
-	id_imagen int auto_increment,
-    nombre varchar(100),
-    tipo varchar(10),
-    tamano BIGINT, 
-    pixel LONGBLOB,
-    primary key (id_imagen)
-);
-
-
 create table producto(
 	id_producto int auto_increment,
-    nombre_producto varchar(100),
-    descripcion_producto varchar(200),
-    precio_producto float,
+    nombre_producto varchar(100) not null,
+    descripcion_producto varchar(200) not null,
+    precio_producto float not null,
     imagen_producto longtext,
-    id_categoria int,
+    id_categoria int not null,
     primary key(id_producto),
-    foreign key (id_categoria) references categoria(id_categoria)
+    foreign key (id_categoria) references categoria(id_categoria) on delete cascade
 );
 
 create table direccion_usuario(
 	id_direccion_usuario int auto_increment,
-    id_usuario int,
-    id_edificio int,
-    numero_apto char(10),
+    id_usuario int not null,
+    id_edificio int not null,
+    numero_apto char(10) not null,
     primary key (id_direccion_usuario),
-    foreign key (id_usuario) references usuario(id_usuario),
-    foreign key (id_edificio) references edificio(id_edificio)
+    foreign key (id_usuario) references usuario(id_usuario) on delete cascade,
+    foreign key (id_edificio) references edificio(id_edificio) on delete cascade
 );
 
 create table pedido(
@@ -90,9 +80,11 @@ create table promociones(
     primary key(id_promocion)
 );
 
+create table favoritos(
+	id_usuario int,
+    id_producto int,
+    primary key (id_usuario, id_producto),
+    foreign key (id_usuario) references usuario(id_usuario),
+    foreign key (id_producto) references producto(id_producto)
+);
 
-
-
-select * from producto;
-update producto set id_categoria = 1 where id_producto = 10;
-select * from categoria;

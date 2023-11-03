@@ -29,6 +29,9 @@ values ('test', 'Test1', 'Test2', '12345678', md5('test'), 1);
 select * from usuario;
 select * from producto;
 select * from promociones;
+select * from categoria;
 
+delete from producto where id_producto < 4;
+update producto set id_categoria = 2 where id_producto = 6;
 
-delete from producto where id_producto > 6;
+insert into categoria(id_categoria, descripcion_categoria) values("1", "Comida");

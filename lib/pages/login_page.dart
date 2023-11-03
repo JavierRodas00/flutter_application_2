@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/loading.dart';
-import 'package:flutter_application_2/pages/new_user_page.dart';
+import 'package:flutter_application_2/providers/categoria_provider.dart';
+import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -21,11 +22,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController correo_usuario = TextEditingController();
   TextEditingController password_usuario = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   navegar_new_user() {
     Navigator.pushNamed(context, '/register');
@@ -81,14 +77,12 @@ class _LoginPageState extends State<LoginPage> {
             // pop loading
             Navigator.pop(context);
             if (aux["admin_usuario"] == "1") {
-              context
-                  .read<UsuarioProvider>()
-                  .set(1, aux["nombre_usuario"], aux["apellido_usuario"]);
-              Navigator.pushNamed(context, '/home');
+              context.read<UsuarioProvider>().set(1, aux["nombre_usuario"],
+                  aux["apellido_usuario"], aux["id_usuario"]);
+              Navigator.pushNamed(context, '/ahome');
             } else {
-              context
-                  .read<UsuarioProvider>()
-                  .set(0, aux["nombre_usuario"], aux["apellido_usuario"]);
+              context.read<UsuarioProvider>().set(0, aux["nombre_usuario"],
+                  aux["apellido_usuario"], aux["id_usuario"]);
               Navigator.pushNamed(context, '/introScreen');
             }
           }

@@ -125,7 +125,8 @@ class ProductosPageAdmin extends StatelessWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      delete(_productos[index].id_producto);
+                                      delete(context,
+                                          _productos[index].id_producto);
                                     },
                                     child: const Icon(Icons.delete)),
                               ),
@@ -142,8 +143,9 @@ class ProductosPageAdmin extends StatelessWidget {
     );
   }
 
-  delete(id) {
-    print("Eliminar producto id: $id");
+  delete(BuildContext context, String id) {
+    // print("Eliminar producto id: $id");
+    context.read<ProductoProvider>().eliminar(id);
   }
 
   modificar(id) {

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/model/Categoria.dart';
+import 'package:flutter_application_2/model/Categoria_model.dart';
 import 'package:flutter_application_2/providers/categoria_provider.dart';
 import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +26,14 @@ class _NewProductoState extends State<NewProducto> {
   TextEditingController descripcion_producto = TextEditingController();
   TextEditingController precio_producto = TextEditingController();
   TextEditingController imagen_producto = TextEditingController();
+  TextEditingController categoria_producto = TextEditingController();
 
   String _image64 = '';
   Uint8List selectedImage = Uint8List(0);
   bool aux = false;
-  late Categoria aux1;
 
-  List<Categoria> categorias = [];
-  late Categoria dropdownValue;
+  List<CategoriaModel> categorias = [];
+  late CategoriaModel dropdownValue;
 
   void wrongMessage() {
     showDialog(
@@ -56,6 +56,7 @@ class _NewProductoState extends State<NewProducto> {
   }
 
   register() {
+    //print(aux1.descripcion_categoria);
     showDialog(
       context: context,
       builder: (context) {
@@ -66,20 +67,29 @@ class _NewProductoState extends State<NewProducto> {
     );
     if (nombre_producto.text != "" &&
         descripcion_producto.text != "" &&
-        precio_producto.text != "") {
-      print(aux1.id_categoria);
+        precio_producto.text != "" &&
+        categoria_producto.text != "") {
+      //print(aux1.id_categoria);
+      int idcat = 0;
+      String descat = "";
+      for (var i in categorias) {
+        if (i.descripcion_categoria == categoria_producto.text) {
+          idcat = int.parse(i.id_categoria);
+          descat = i.descripcion_categoria;
+        }
+      }
       context.read<ProductoProvider>().insert(
-          context,
           nombre_producto.text,
           descripcion_producto.text,
           precio_producto.text,
-          aux1.id_categoria,
+          idcat.toString(),
+          descat,
           _image64);
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
       Navigator.pop(context);
-      print("Llene todos los campos");
+      //print("Llene todos los campos");
       wrongMessage();
     }
   }
@@ -88,8 +98,7 @@ class _NewProductoState extends State<NewProducto> {
   Widget build(BuildContext context) {
     FilePickerResult? result;
     categorias = context.watch<CategoriaProvider>().categorias;
-    dropdownValue = categorias[0];
-    aux1 = dropdownValue;
+    dropdownValue = categorias.first;
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[300],
@@ -116,7 +125,7 @@ class _NewProductoState extends State<NewProducto> {
                           allowedExtensions: ['jpg', 'png', 'jpeg'],
                         );
                         if (result == null) {
-                          print("No file selected");
+                          //print("No file selected");
                         } else {
                           setState(() {
                             selectedImage = result!.files[0].bytes!;
@@ -161,18 +170,19 @@ class _NewProductoState extends State<NewProducto> {
 
                     // Seleccion de categoria
                     Center(
-                      child: DropdownMenu<Categoria>(
+                      child: DropdownMenu<CategoriaModel>(
+                        controller: categoria_producto,
                         initialSelection: categorias.first,
                         onSelected: (value) {
-                          aux1 = value!;
+                          //print(aux1.descripcion_categoria);
                           setState(() {
-                            dropdownValue = value;
+                            dropdownValue = value!;
                           });
                         },
                         dropdownMenuEntries: categorias
-                            .map<DropdownMenuEntry<Categoria>>(
-                                (Categoria value) {
-                          return DropdownMenuEntry<Categoria>(
+                            .map<DropdownMenuEntry<CategoriaModel>>(
+                                (CategoriaModel value) {
+                          return DropdownMenuEntry<CategoriaModel>(
                               value: value, label: value.descripcion_categoria);
                         }).toList(),
                       ),

@@ -44,6 +44,7 @@ dependencies:
   carousel_slider: ^4.2.1
   email_validator: '^2.1.16'
   flutter_speed_dial:
+  line_icons: ^2.0.1
 
 dev_dependencies:
   flutter_test:
