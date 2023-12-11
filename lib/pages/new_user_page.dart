@@ -3,7 +3,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/model/Edificio_model.dart';
+import 'package:flutter_application_2/providers/bd_provider.dart';
+import 'package:flutter_application_2/providers/edificio_provider.dart';
+import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../../components/my_buttons.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -23,6 +28,12 @@ class _NewUserState extends State<NewUser> {
   TextEditingController password_usuario2 = TextEditingController();
   TextEditingController genero_usuario = TextEditingController();
   TextEditingController fecha_nac_usuario = TextEditingController();
+  TextEditingController id_edificio = TextEditingController();
+  TextEditingController numero_apto = TextEditingController();
+
+  List<EdificioModel> edificios = [];
+  String idusuario = "0";
+  late EdificioModel dropdownValue1;
 
 //Alerta
   void alertMessage(String mensaje) {
@@ -45,12 +56,14 @@ class _NewUserState extends State<NewUser> {
         );
       },
     );
+    //print(dropdownValue1.id_edificio);
     if (Validate(correo_usuario.text) &&
         password_usuario1.text != "" &&
         password_usuario2.text != "" &&
         nombre_usuario.text != "" &&
         apellido_usuario.text != "" &&
         telefono_usuario.text != "" &&
+        numero_apto.text != "" &&
         genero_usuario.text != "") {
       if (password_usuario1.text == password_usuario2.text) {
         int genero;
@@ -59,7 +72,8 @@ class _NewUserState extends State<NewUser> {
         } else {
           genero = 1;
         }
-        String url = "http://localhost/apiSP2/user/new_user.php";
+        String url =
+            BDProvider().url + "detocho/api/scripts/login.php?action=register";
         try {
           var res = await http.post(Uri.parse(url), body: {
             "correo_usuario": correo_usuario.text,
@@ -68,22 +82,26 @@ class _NewUserState extends State<NewUser> {
             "telefono_usuario": telefono_usuario.text,
             "id_genero": genero.toString(),
             "fecha_nac": fecha_nac_usuario.text,
-            "password_usuario": password_usuario1.text
+            "password_usuario": password_usuario1.text,
+            "id_edificio": dropdownValue1.id_edificio,
+            "numero_apto": numero_apto.text
           });
 
           var response = jsonDecode(res.body);
           if (res.statusCode == 200) {
-            //print("Usuario registrado correctamente");
+            //print(response["id"]);
+            context
+                .read<UsuarioProvider>()
+                .setIdUsuario(response["id"].toString());
             Navigator.pop(context);
             Navigator.pop(context);
-            alertMessage("Usuario registrado.");
+            alertMessage("Usuario registrado");
           } else {
             Navigator.pop(context);
-            //print("Error registrar usuario");
             alertMessage("EROR: No se pudo registrar el usuario.");
           }
         } catch (e) {
-          //print(e);
+          print(e);
           Navigator.pop(context);
           alertMessage("ERROR de conexion.");
         }
@@ -111,6 +129,8 @@ class _NewUserState extends State<NewUser> {
 
 //Body
   Widget body(BuildContext context) {
+    idusuario = context.watch<UsuarioProvider>().idUsuario;
+    edificios = context.watch<EdificioProvider>().edificios;
     String dropDownValue = " ";
     return ListView(
       scrollDirection: Axis.vertical,
@@ -137,6 +157,12 @@ class _NewUserState extends State<NewUser> {
                     size: 80,
                     color: Colors.grey[900],
                   ),
+
+                  const Row(children: <Widget>[
+                    Expanded(child: Divider()),
+                    Text("Usuario"),
+                    Expanded(child: Divider()),
+                  ]),
 
                   const SizedBox(height: 25),
 
@@ -177,7 +203,25 @@ class _NewUserState extends State<NewUser> {
 
                   const SizedBox(height: 10),
 
+                  const Row(children: <Widget>[
+                    Expanded(child: Divider()),
+                    Text("Direccion"),
+                    Expanded(child: Divider()),
+                  ]),
+
+                  const SizedBox(height: 25),
+
+                  seleccionarEdificio(),
+
+                  const SizedBox(height: 10),
+
+                  _inputText(numero_apto, "No. Apto", const Icon(Icons.house)),
+
+                  const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+
                   MyRegisterButton(onTap: register),
+
                   // sign in button
 
                   const SizedBox(height: 50),
@@ -259,8 +303,8 @@ class _NewUserState extends State<NewUser> {
         });
       },
       dropdownMenuEntries: const [
-        DropdownMenuEntry(value: 0, label: "Hombre"),
-        DropdownMenuEntry(value: 1, label: "Mujer")
+        DropdownMenuEntry(value: 1, label: "Hombre"),
+        DropdownMenuEntry(value: 2, label: "Mujer")
       ],
     );
   }
@@ -280,9 +324,32 @@ class _NewUserState extends State<NewUser> {
           //helperText: mensaje,
           ),
       onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
         _selectedDate(context);
       },
+    );
+  }
+
+//Seleccionar Edificio
+  Widget seleccionarEdificio() {
+    dropdownValue1 = edificios.first;
+    return Center(
+      child: DropdownMenu<EdificioModel>(
+        controller: id_edificio,
+        initialSelection: edificios.first,
+        label: const Text("Edificio"),
+        width: 350,
+        onSelected: (value) {
+          setState(() {
+            dropdownValue1 = value!;
+          });
+        },
+        dropdownMenuEntries:
+            edificios.map<DropdownMenuEntry<EdificioModel>>((e) {
+          return DropdownMenuEntry<EdificioModel>(
+              value: e, label: e.nombre_edificio);
+        }).toList(),
+      ),
     );
   }
 

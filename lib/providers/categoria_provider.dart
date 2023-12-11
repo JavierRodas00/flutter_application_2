@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/model/Categoria_model.dart';
+import 'package:flutter_application_2/providers/bd_provider.dart';
 import 'package:http/http.dart' as http;
 
 class CategoriaProvider with ChangeNotifier {
@@ -11,10 +12,10 @@ class CategoriaProvider with ChangeNotifier {
   int get selectedCategoria => _selectedCategoria;
 
   void start() async {
-    //CategoriaModel("0", "Todo")
     _categorias = [];
 
-    String url = "http://localhost/apiSP2/admin/ver_categoria.php";
+    String url =
+        BDProvider().url + "detocho/api/admin/categoria.php?action=ver";
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -38,7 +39,7 @@ class CategoriaProvider with ChangeNotifier {
         );
       },
     );
-    String url = "http://localhost/apiSP2/admin/agregar_categoria.php";
+    String url = BDProvider().url + "apiSP2/admin/categoria.php?action=agregar";
     try {
       var res = await http.post(Uri.parse(url), body: {
         "descripcion_categoria": descripcionCategoria,
@@ -74,7 +75,8 @@ class CategoriaProvider with ChangeNotifier {
       if (i.id_categoria == id) {
         _categorias.remove(i);
 
-        String url = "http://localhost/apiSP2/admin/eliminar_categoria.php";
+        String url =
+            BDProvider().url + "apiSP2/admin/categoria.php?action=eliminar";
         try {
           final response = await http.post(Uri.parse(url), body: {
             "id_categoria": id,

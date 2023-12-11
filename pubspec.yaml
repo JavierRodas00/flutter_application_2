@@ -45,6 +45,8 @@ dependencies:
   email_validator: '^2.1.16'
   flutter_speed_dial:
   line_icons: ^2.0.1
+  syncfusion_flutter_datagrid:
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:

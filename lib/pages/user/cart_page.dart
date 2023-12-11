@@ -5,16 +5,23 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/appbar.dart';
+import 'package:flutter_application_2/components/my_buttons.dart';
 import 'package:flutter_application_2/components/my_nav_bar.dart';
 import 'package:flutter_application_2/model/Carrito_model.dart';
 import 'package:flutter_application_2/providers/carrito_provider.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   CartPage({super.key});
 
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
   List<CarritoModel> _carrito = [];
+
   @override
   Widget build(BuildContext context) {
     _carrito = context.watch<CarritoProvider>().carrito;
@@ -82,23 +89,75 @@ class CartPage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        IconButton(
-                            onPressed: () {
-                              delete(context, _carrito[index]);
-                            },
-                            icon: const Icon(Icons.remove)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  add(context, _carrito[index]);
+                                },
+                                icon: const Icon(Icons.add)),
+                            IconButton(
+                                onPressed: () {
+                                  delete(context, _carrito[index]);
+                                },
+                                icon: const Icon(Icons.remove)),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ));
           },
         )),
+        Row(
+          children: [
+            Expanded(
+                child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 30.0, bottom: 15),
+                child: MyButton(
+                  onTap: () {
+                    checkOut(context);
+                  },
+                  title: "Pedir.",
+                ),
+              ),
+            ))
+          ],
+        ),
       ],
     );
   }
 
   delete(BuildContext context, CarritoModel c) {
-    //print("Eliminar producto id: ${c.producto.id_producto}");
     context.read<CarritoProvider>().eliminar(c);
+  }
+
+  add(BuildContext context, CarritoModel c) {
+    context.read<CarritoProvider>().add(c);
+  }
+
+  void checkOut(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext buildcontext) {
+          return AlertDialog(
+            title: const Text("Confirmar Pedido"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    context.read<CarritoProvider>().checkout(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Si")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("No")),
+            ],
+          );
+        });
   }
 }

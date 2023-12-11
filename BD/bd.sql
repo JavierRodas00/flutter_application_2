@@ -18,6 +18,7 @@ create table usuario(
     telefono_usuario varchar(10),
     password_usuario varchar(200) not null,
     admin_usuario char(1) default 0,
+    cambio_pass char(1) default 0,
     primary key(id_usuario),
     foreign key (id_genero) references genero(id_genero)
 );
@@ -63,7 +64,9 @@ create table pedido(
 	id_pedido int auto_increment,
     id_usuario int,
     id_direccion_usuario int,
-    fecha date,
+    fecha datetime,
+    estado char(1) default('0'),
+    precio double, 
     primary key(id_pedido)
 );
 
@@ -71,7 +74,8 @@ create table pedido_producto(
 	id_pedido int,
     id_producto int,
     cantidad_producto int,
-    primary key(id_pedido,id_producto)
+    primary key(id_pedido,id_producto),
+    foreign key (id_pedido) references pedido(id_pedido) on delete cascade
 );
 
 create table promociones(
@@ -87,4 +91,27 @@ create table favoritos(
     foreign key (id_usuario) references usuario(id_usuario),
     foreign key (id_producto) references producto(id_producto)
 );
+use deTocho1;
+select * from edificio;
+select * from usuario;
+select * from direccion_usuario;
+select * from pedido;
+select * from pedido_producto;
+update usuario set password_usuario = md5('prueba') where id_usuario=3;
 
+delete from pedido where id_pedido = 1;
+
+SELECT pe.id_pedido, pe.id_usuario, pe.id_direccion_usuario, pe.estado, pp.id_producto, pp.cantidad_producto,
+                       pr.*
+                FROM pedido pe, pedido_producto pp, producto pr
+                WHERE pe.id_pedido = pp.id_pedido
+                AND pr.id_producto = pp.id_producto
+                AND pe.estado < 3
+                ORDER BY pe.fecha;
+                
+use deTocho1;                
+SELECT * 
+                FROM pedido 
+                WHERE id_usuario = '3'
+                AND estado >= 0 
+                AND estado <= 3

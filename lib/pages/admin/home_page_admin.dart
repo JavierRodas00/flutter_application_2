@@ -3,8 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/appbar.dart';
 import 'package:flutter_application_2/components/my_nav_bar.dart';
+import 'package:flutter_application_2/model/Carrito_model.dart';
+import 'package:flutter_application_2/model/Pedido_model.dart';
+import 'package:flutter_application_2/providers/pedido_provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -16,22 +20,25 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   var primary_color = const Color.fromARGB(255, 238, 179, 1);
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+  static const TextStyle optionStyle = TextStyle(fontSize: 20);
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<PedidoProvider>().start();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<PedidoModel> _pedido = context.watch<PedidoProvider>().pendientes;
+    List<PedidoModel> _proceso = context.watch<PedidoProvider>().proceso;
+    List<PedidoModel> _enviado = context.watch<PedidoProvider>().enviados;
     List<Widget> _widgetOptions = <Widget>[
-      pendientes(context),
-      const Text(
-        "En Proceso",
-        style: optionStyle,
-      ),
-      const Text(
-        "Enviados",
-        style: optionStyle,
-      )
+      crearLista(_pedido),
+      crearLista(_proceso),
+      crearLista(_enviado),
     ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar(context),
@@ -94,55 +101,150 @@ class _AdminHomePageState extends State<AdminHomePage> {
             child: const Icon(Icons.inventory),
             label: "Productos",
             onTap: () {
-              Navigator.pop(context);
               Navigator.pushNamed(context, '/producto');
             }),
-        SpeedDialChild(
+        /* SpeedDialChild(
             child: const Icon(Icons.category),
             label: "Categoria",
             onTap: () {
-              Navigator.pop(context);
               Navigator.pushNamed(context, '/categoria');
-            }),
+            }), */
       ],
     );
   }
 
-  Column body(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-            child: ListView(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: Center(
-                child: Text(
-                  "PEDIDOS",
-                  style: TextStyle(fontSize: 30),
-                ),
-              ),
-            ),
-            const Divider(),
-            SizedBox(
-              height: 500,
-              width: 200,
+  Widget crearLista(List<PedidoModel> lista) {
+    return ListView.builder(
+      itemCount: lista.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            _mostrarDetalle(lista[index]);
+          },
+          child: Container(
+            width: 100,
+            height: 175,
+            padding: const EdgeInsets.all(5),
+            child: Card(
+              color: Colors.transparent,
+              elevation: 0,
               child: Container(
-                decoration: const BoxDecoration(color: Colors.red),
-              ),
-            )
-          ],
-        ))
-      ],
+                  padding: const EdgeInsets.all(15),
+                  width: 125,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: const Color.fromARGB(171, 255, 250, 195)),
+                  child: Row(
+                    children: [
+                      Text(
+                        lista[index].id_pedido,
+                        style: optionStyle,
+                      ),
+                      const VerticalDivider(
+                        color: Colors.black,
+                      ),
+                      Expanded(
+                          child: crearListaProductos(lista[index].productos)),
+                    ],
+                  )),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Column pendientes(BuildContext context) {
-    return const Column(
-      children: [Text("PRUEBA")],
+  Widget crearListaProductos(List<CarritoModel> lista) {
+    double precioTotal = 0;
+
+    for (var i in lista) {
+      precioTotal = precioTotal + i.precio;
+    }
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: lista.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Row(
+                        children: [
+                          Text(
+                            lista[index].cantidad.toString(),
+                            style: optionStyle,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                              child: Text(
+                            lista[index].producto.nombre_produto,
+                            style: optionStyle,
+                          )),
+                          Text(lista[index].precio.toString())
+                        ],
+                      )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const Divider(
+            color: Colors.black,
+          ),
+          Row(
+            children: [
+              const Expanded(child: Text("Total")),
+              Text(
+                precioTotal.toString(),
+                style: optionStyle,
+              ),
+            ],
+          )
+        ],
+      ),
     );
+  }
+
+  void _mostrarDetalle(PedidoModel pedido) {
+    context.read<PedidoProvider>().setActual(pedido);
+    Navigator.pushNamed(context, '/detalle_pedido');
+    /* showDialog(
+        context: context,
+        builder: (BuildContext buildcontext) {
+          return AlertDialog(
+            title: const Text("Alerta"),
+            content: const Text("Seguro que quiere terminar este proceso?"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    context.read<PedidoProvider>().cambiarEstado(pedido);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Si")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("No")),
+            ],
+          );
+        }); */
   }
 }

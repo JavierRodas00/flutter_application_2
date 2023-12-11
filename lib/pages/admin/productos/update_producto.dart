@@ -74,7 +74,8 @@ class _NewProductoState extends State<NewProducto> {
           precio_producto.text,
           aux1.id_categoria,
           aux1.descripcion_categoria,
-          _image64);
+          _image64,
+          context);
       Navigator.pop(context);
       Navigator.pop(context);
     } else {

@@ -18,4 +18,9 @@ class UsuarioProvider with ChangeNotifier {
     _idUsuario = id;
     notifyListeners();
   }
+
+  void setIdUsuario(String id) {
+    _idUsuario = id;
+    notifyListeners();
+  }
 }

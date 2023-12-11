@@ -15,7 +15,7 @@ class CategoriasPageAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _categorias = context.watch<CategoriaProvider>().categorias;
-    print(_categorias.length);
+    //print(_categorias.length);
     return Scaffold(
       appBar: appBar(context),
       drawer: const MyDrawer(),
@@ -46,7 +46,6 @@ class CategoriasPageAdmin extends StatelessWidget {
           child: ListView.builder(
             itemCount: _categorias.length,
             itemBuilder: (BuildContext context, int index) {
-              //Uint8List ima = base64Decode(_productos[index].imagen);
               return Container(
                 width: 100,
                 height: 100,
@@ -63,12 +62,6 @@ class CategoriasPageAdmin extends StatelessWidget {
                         color: const Color.fromARGB(171, 255, 250, 195)),
                     child: Row(
                       children: [
-                        /* Image.memory(
-                          ima,
-                          width: 150,
-                          height: 150,
-                          fit: BoxFit.fill,
-                        ), */
                         Text(
                           _categorias[index].id_categoria,
                           style: const TextStyle(fontSize: 18),
@@ -115,6 +108,30 @@ class CategoriasPageAdmin extends StatelessWidget {
   }
 
   eliminar(BuildContext context, String id) {
-    context.read<CategoriaProvider>().eliminar(id);
+    _showAlertDialog(context, id);
+  }
+
+  void _showAlertDialog(BuildContext context, String id) {
+    showDialog(
+        context: context,
+        builder: (BuildContext buildcontext) {
+          return AlertDialog(
+            title: const Text("Alerta"),
+            content: const Text("Seguro que quiere eliminar esta categoria?"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    context.read<CategoriaProvider>().eliminar(id);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Si")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("No")),
+            ],
+          );
+        });
   }
 }

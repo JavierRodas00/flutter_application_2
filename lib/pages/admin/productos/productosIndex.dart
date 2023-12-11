@@ -29,7 +29,7 @@ class ProductosPageAdmin extends StatelessWidget {
   Widget body(context) {
     return Column(
       children: [
-        Row(
+        /* Row(
           children: [
             Expanded(
                 child: Center(
@@ -44,7 +44,7 @@ class ProductosPageAdmin extends StatelessWidget {
               ),
             ))
           ],
-        ),
+        ), */
         Expanded(
             child: ListView.builder(
           itemCount: _productos.length,
@@ -81,12 +81,6 @@ class ProductosPageAdmin extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   _productos[index].nombre_produto,
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  _productos[index].descripcion,
                                   style: const TextStyle(fontSize: 18),
                                 ),
                               ),

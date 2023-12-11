@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/appbar.dart';
+import 'package:flutter_application_2/components/scrollBehavior.dart';
 import 'package:flutter_application_2/model/Categoria_model.dart';
 import 'package:flutter_application_2/pages/user/shop_page.dart';
 import 'package:flutter_application_2/providers/categoria_provider.dart';
@@ -25,7 +26,8 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         appBar: appBar(context),
         drawer: const MyDrawer(),
-        body: Body());
+        body: ScrollConfiguration(
+            behavior: NoGlowScrollBehavior(), child: Body()));
   }
 
 //Floating Action Button

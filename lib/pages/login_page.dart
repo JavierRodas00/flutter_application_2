@@ -4,12 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/components/loading.dart';
-import 'package:flutter_application_2/providers/categoria_provider.dart';
+import 'package:flutter_application_2/providers/bd_provider.dart';
 import 'package:flutter_application_2/providers/producto_provider.dart';
 import 'package:flutter_application_2/providers/usuario_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import '../../components/my_buttons.dart';
 import '../components/my_textfield.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,33 +56,40 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-
+    context.read<ProductoProvider>().start(context);
     //Verificar que los campos correo y password esten lleno
     if (correo_usuario.text.isNotEmpty && password_usuario.text.isNotEmpty) {
-      String url = "http://localhost/apiSP2/user/login.php";
+      String url =
+          BDProvider().url + "detocho/api/scripts/login.php?action=login";
       //Mandar a llamar a API
       try {
         var res = await http.post(Uri.parse(url), body: {
           "correo_usuario": correo_usuario.text,
           "password_usuario": password_usuario.text
         });
-
         if (res.statusCode == 200) {
           var response = jsonDecode(res.body);
           for (var aux in response) {
-            print("Login usuario: ${aux["id_usuario"]}");
+            //print("Login usuario: ${aux["id_usuario"]}");
             correo_usuario.clear();
             password_usuario.clear();
             // pop loading
             Navigator.pop(context);
             if (aux["admin_usuario"] == "1") {
+              //context.read<PedidoProvider>().start();
               context.read<UsuarioProvider>().set(1, aux["nombre_usuario"],
                   aux["apellido_usuario"], aux["id_usuario"]);
               Navigator.pushNamed(context, '/ahome');
             } else {
-              context.read<UsuarioProvider>().set(0, aux["nombre_usuario"],
-                  aux["apellido_usuario"], aux["id_usuario"]);
-              Navigator.pushNamed(context, '/introScreen');
+              if (aux["cambio_pass"] == "1") {
+                context.read<UsuarioProvider>().set(0, aux["nombre_usuario"],
+                    aux["apellido_usuario"], aux["id_usuario"]);
+                Navigator.pushNamed(context, '/newPass');
+              } else {
+                context.read<UsuarioProvider>().set(0, aux["nombre_usuario"],
+                    aux["apellido_usuario"], aux["id_usuario"]);
+                Navigator.pushNamed(context, '/introScreen');
+              }
             }
           }
         } else {
@@ -134,100 +140,97 @@ class _LoginPageState extends State<LoginPage> {
                 height: 200,
               ),
 
-              const SizedBox(height: 25),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(children: [
+                  Expanded(
+                      child: Column(
+                    children: [
+                      // CORREO
+                      MyTextField(
+                        controller: correo_usuario,
+                        hintText: 'Correo',
+                        obscureText: false,
+                      ),
 
-              // email textfield
-              MyTextField(
-                controller: correo_usuario,
-                hintText: 'Correo',
-                obscureText: false,
+                      const SizedBox(height: 10),
+
+                      // PASSWORD
+                      MyTextField(
+                        controller: password_usuario,
+                        hintText: 'Contraseña',
+                        obscureText: true,
+                      ),
+                    ],
+                  )),
+                  const SizedBox(width: 10),
+                  // LOGIN BUTTON
+                  GestureDetector(
+                    onTap: () {
+                      signUserIn();
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 221, 164, 41),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Icon(
+                        Icons.arrow_right_alt,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ]),
               ),
-
-              const SizedBox(height: 10),
-
-              // password textfield
-              MyTextField(
-                controller: password_usuario,
-                hintText: 'Contraseña',
-                obscureText: true,
-              ),
-
-              const SizedBox(height: 10),
 
               // forgot password?
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Olvidó su contraseña?',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // sign in button
-              MyLoginButton(
-                onTap: signUserIn,
-              ),
-
-              const SizedBox(height: 50),
-
-              MyNewUserButton(
-                onTap: navegar_new_user,
-              ),
-
-              /* // or continue with
-                Padding(
+              GestureDetector(
+                onTap: () {
+                  olvidoPass();
+                },
+                child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'O continúa con',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
+                      Text(
+                        'Olvidó su contraseña?',
+                        style:
+                            TextStyle(fontSize: 12.5, color: Colors.grey[600]),
                       ),
                     ],
                   ),
                 ),
+              ),
 
-                const SizedBox(height: 50),
+              const SizedBox(height: 50),
 
-                // google + apple sign in buttons
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
-                    SizedBox(width: 25),
-
-                    // apple button
-                    SquareTile(imagePath: 'lib/images/apple.png')
-                  ],
-                ),*/
+              GestureDetector(
+                  onTap: () {
+                    navegar_new_user();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Registrate",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ))
             ],
           ),
         ),
       ),
     );
+  }
+
+  olvidoPass() {
+    Navigator.pushNamed(context, '/recovery');
   }
 }
